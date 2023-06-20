@@ -1,0 +1,45 @@
+name: Test and Build
+
+on:
+  push:
+    branches: 
+      - "main"
+      - "ci"
+
+  pull_request:
+    branches: 
+      - "main"
+      - "ci"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{matrix.node-version}}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build artifact
+        run: npm run build
+
+      - name: Build application artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ci-cd-artifact
+          path: .

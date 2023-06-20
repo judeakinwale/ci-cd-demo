@@ -1,0 +1,40 @@
+# Build and Push Docker Image to Azure Container Registry
+
+name: Build and Push
+
+on:
+  push:
+    branches: 
+      - "main"
+      - "ci"
+
+  pull_request:
+    branches: 
+      - "main"
+      - "ci"
+
+env:
+  IMAGE_NAME: test_image
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Login to Azure Container Registry using Docker
+      run: docker login ${{ secrets.REGISTRY_LOGIN_SERVER }} --username ${{ secrets.REGISTRY_USERNAME }} --password ${{ secrets.REGISTRY_PASSWORD }}
+    
+    - name: Build the Docker image
+      # run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      run: docker build . --file Dockerfile --tag $IMAGE_NAME
+      
+    - name: Tag the Docker Image
+      run: docker tag $IMAGE_NAME ${{ secrets.REGISTRY_LOGIN_SERVER }}/$IMAGE_NAME
+      
+    - name: Push the Docker Image to Azure Container Registry
+      run: docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/$IMAGE_NAME
+  
