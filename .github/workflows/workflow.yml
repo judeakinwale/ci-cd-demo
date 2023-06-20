@@ -3,14 +3,15 @@ name: Test and Build Node Js Appplication
 
 on:
   push:
-    branches:
+    branches: 
       - "main"
       - "ci"
 
   pull_request:
-    branches:
+    branches: 
       - "main"
       - "ci"
+
 
 jobs:
   build:
