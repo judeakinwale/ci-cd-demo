@@ -12,7 +12,6 @@ on:
       - "main"
       - "ci"
 
-
 jobs:
   build:
     runs-on: ubuntu-latest    
@@ -32,3 +31,12 @@ jobs:
 
       - name: Run tests
         run: npm test --if-present
+      
+      - name: Build artifact
+        run: npm run build --if-present
+
+      - name: Build application artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ci-cd-artifact
+          path: .
