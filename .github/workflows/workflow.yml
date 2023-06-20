@@ -1,0 +1,33 @@
+
+name: Test and Build Node Js Appplication
+
+on:
+  push:
+    branches:
+      - "main"
+      - "ci"
+
+  pull_request:
+    branches:
+      - "main"
+      - "ci"
+
+job:
+  build:
+    runs-on: ubuntu-latest    
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: [16.x]
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test --if-present
